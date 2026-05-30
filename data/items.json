@@ -1,0 +1,21 @@
+{
+  "torn_cloth": {
+    "name": "Torn Cloth",
+    "type": "material",
+    "description": "A piece of damaged cloth.",
+    "value": 2
+  },
+  "rusty_knife": {
+    "name": "Rusty Knife",
+    "type": "weapon",
+    "description": "An old knife with poor balance.",
+    "value": 8,
+    "attack_bonus": 2
+  },
+  "small_coin_pouch": {
+    "name": "Small Coin Pouch",
+    "type": "treasure",
+    "description": "A small pouch containing coins.",
+    "value": 15
+  }
+}

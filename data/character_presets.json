@@ -1,0 +1,61 @@
+{
+  "hero": {
+    "name": "Hero",
+    "pain_profile": "normal",
+    "pain": {
+      "max_pain": 100
+    },
+    "skills": ["power_strike", "firebolt"],
+    "attributes": {
+      "strength": 7,
+      "endurance": 6,
+      "agility": 8,
+      "intelligence": 5
+    },
+    "base_stats": {
+      "base_hp": 100,
+      "base_mp": 30,
+      "base_attack": 5,
+      "base_defense": 2,
+      "base_speed": 0
+    },
+    "progression": {
+      "level": 1,
+      "exp": 0,
+      "exp_to_next_level": 100,
+      "attribute_points": 0,
+      "attribute_points_per_level": 3,
+      "exp_multiplier": 1.25
+    }
+  },
+
+  "warrior": {
+    "name": "Warrior",
+    "pain_profile": "normal",
+    "pain": {
+      "max_pain": 150
+    },
+    "skills": ["power_strike"],
+    "attributes": {
+      "strength": 10,
+      "endurance": 9,
+      "agility": 5,
+      "intelligence": 2
+    },
+    "base_stats": {
+      "base_hp": 120,
+      "base_mp": 15,
+      "base_attack": 7,
+      "base_defense": 4,
+      "base_speed": 0
+    },
+    "progression": {
+      "level": 1,
+      "exp": 0,
+      "exp_to_next_level": 100,
+      "attribute_points": 0,
+      "attribute_points_per_level": 3,
+      "exp_multiplier": 1.25
+    }
+  }
+}

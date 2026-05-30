@@ -1,0 +1,25 @@
+{
+  "power_strike": {
+    "name": "Power Strike",
+    "type": "attack",
+    "mp_cost": 5,
+    "description": "A heavy attack that consumes MP to deal more damage.",
+    "target_part_required": true,
+    "accuracy": 0.9,
+    "damage_multiplier": 1.5,
+    "scaling_attribute": "strength",
+    "scaling_multiplier": 0.5
+  },
+
+  "firebolt": {
+    "name": "Firebolt",
+    "type": "attack",
+    "mp_cost": 8,
+    "description": "A basic magic attack powered by intelligence.",
+    "target_part_required": true,
+    "accuracy": 0.85,
+    "damage_multiplier": 1.2,
+    "scaling_attribute": "intelligence",
+    "scaling_multiplier": 1.2
+  }
+}

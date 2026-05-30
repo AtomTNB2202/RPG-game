@@ -1,0 +1,70 @@
+{
+  "bandit": {
+    "name": "Bandit",
+    "strength": 5,
+    "speed": 7,
+    "endurance": 5,
+
+    "instant_death_parts": ["head"],
+
+    "body_parts": {
+      "head": {
+        "name": "Head",
+        "base_hp": 18,
+        "endurance_multiplier": 2,
+        "accuracy": 0.40
+      },
+      "body": {
+        "name": "Body",
+        "base_hp": 50,
+        "endurance_multiplier": 4,
+        "accuracy": 0.85
+      },
+      "arms": {
+        "name": "Arms",
+        "base_hp": 28,
+        "endurance_multiplier": 2,
+        "accuracy": 0.65
+      },
+      "legs": {
+        "name": "Legs",
+        "base_hp": 28,
+        "endurance_multiplier": 2,
+        "accuracy": 0.70
+      }
+    },
+
+    "weak_parts": {
+      "head": "Low durability. Disabling this part can instantly defeat this enemy.",
+      "arms": "Disabling this part prevents arm-based attacks.",
+      "legs": "Disabling this part prevents leg-based attacks and lowers mobility."
+    },
+
+    "intents": [
+      {
+        "name": "arm_strike",
+        "hint": "The enemy watches your weapon hand.",
+        "target_zone": "arms",
+        "damage_multiplier": 1.0,
+        "requires_part": "arms"
+      },
+      {
+        "name": "leg_sweep",
+        "hint": "The enemy lowers its stance and aims low.",
+        "target_zone": "legs",
+        "damage_multiplier": 0.9,
+        "requires_part": "legs"
+      },
+      {
+        "name": "body_attack",
+        "hint": "The enemy prepares a direct attack.",
+        "target_zone": "body",
+        "damage_multiplier": 1.2
+      }
+    ],
+
+    "exp_reward": 64,
+    "gold_reward": 20,
+    "loot": []
+  }
+}
