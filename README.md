@@ -1,30 +1,159 @@
 # RPG Game
 
-A text-based RPG game prototype written in Python.
-The project focuses on building a modular RPG combat system with party-based battles, body-part targeting, skills, attributes, pain mechanics, guard behavior, and a temporary Pygame UI for demonstration.
+A Python text-based RPG prototype focused on building a modular and expandable combat system.
 
-## Project Overview
+This project is currently in early development. The main goal is to experiment with RPG mechanics such as party-based combat, body-part targeting, character attributes, MP-based skills, pain management, enemy intent, inventory rewards, and clean separation between game behavior and calculation logic.
 
-This project is an RPG combat prototype designed for learning and experimentation.
-The main goal is to separate game behavior from game calculations so the system is easier to expand later.
+## Overview
 
-Current features include:
+RPG Game is a console-based RPG combat prototype written in Python.
 
-* Party-based combat
+The project focuses on creating a maintainable RPG architecture where:
+
+* Game behavior and flow are handled by gameplay modules.
+* Mathematical formulas are separated into calculator modules.
+* Characters and enemies are created from data-driven factories.
+* Combat, encounter, inventory, leveling, and attribute systems can be expanded step by step.
+
+## Current Features
+
+* Text-based combat system
+* Party-based battle structure
 * Enemy body-part targeting
+* HP and MP system
+* Pain system with unconscious state
 * Attribute system
-* Level-up and attribute point upgrading
-* HP, MP, pain, and unconscious mechanics
-* Skill system based on MP
+* Level-up and attribute point allocation
+* MP-based skill system
 * Enemy intent system
-* Analyze action to reveal enemy weak points and vital parts
-* Instant death when vital body parts are destroyed
+* Analyze action for enemy information
+* Instant death rules based on vital body parts
 * Simplified guard system
-* Temporary Pygame combat UI for demo
+* Encounter reward system
+* Inventory test system
+* Data-driven character and enemy creation
+* Main test menu through `main.py`
 
-## Current Combat Design
+## Combat System
 
-The combat system is designed with separation of responsibility:
+The combat system is designed around party members fighting enemies with body parts.
+
+Players can currently perform actions such as:
+
+* Attack
+* Skill
+* Guard
+* Analyze
+* Run
+
+Combat supports enemy intent, turn priority, dodge chance, body-part damage, HP damage, pain gain, unconscious state, and victory/defeat/escape outcomes.
+
+## Guard System
+
+The guard system has been simplified.
+
+There is only one Guard action.
+
+Guard behavior:
+
+* If a character uses Guard and acts before the enemy, the guard becomes a perfect guard.
+* If the enemy acts before the guarding character, the guard becomes a partial guard.
+* If the enemy attacks another party member, the guard does not activate.
+
+This makes the system easier to understand and works better with the current speed-based turn priority system.
+
+## Attribute System
+
+Characters have four main attributes:
+
+| Attribute    | Effect                                               |
+| ------------ | ---------------------------------------------------- |
+| Strength     | Increases attack, defense, and pain resistance       |
+| Endurance    | Increases max HP, status resistance, and max pain    |
+| Agility      | Increases speed and dodge chance                     |
+| Intelligence | Increases max MP and can later support skill scaling |
+
+When a character levels up, they gain attribute points. These points can be spent to upgrade attributes.
+
+## Pain System
+
+Pain increases when a character takes damage.
+
+Pain affects combat performance through different pain stages. At high pain, a character can become unconscious and temporarily lose the ability to act.
+
+The pain system is separated from the main character class so it can be expanded later.
+
+## Skill System
+
+Skills are based on MP.
+
+Current skill support includes:
+
+* MP cost
+* Attack skills
+* Damage multipliers
+* Attribute scaling
+* Optional body-part targeting
+* Accuracy checks
+
+The system is designed so new skills can be added through data instead of hardcoding every skill directly into combat logic.
+
+## Body-Part Combat
+
+Enemies can have multiple body parts, such as head, body, arms, and legs.
+
+Attacking body parts can:
+
+* Damage the selected part
+* Deal HP damage to the enemy
+* Disable that body part
+* Trigger instant death if the disabled part is vital
+
+For example, some enemies can be defeated instantly if a vital body part is destroyed.
+
+## Analyze System
+
+Analyze reveals useful enemy information, such as:
+
+* Vital body parts
+* Weak points
+* Important enemy traits
+
+This gives the player a reason to gather information instead of knowing everything about the enemy immediately.
+
+## Encounter System
+
+The encounter system wraps combat and handles post-combat results.
+
+It can process:
+
+* Victory
+* Escape
+* Defeat
+* EXP rewards
+* Gold rewards
+* Loot rewards
+* Party state after combat
+
+This separates raw combat results from reward calculation and player progression.
+
+## Inventory System
+
+The inventory system is currently testable through `main.py`.
+
+It supports basic item operations such as:
+
+* Adding items
+* Removing items
+* Checking whether an item exists
+* Showing inventory contents
+* Calculating total inventory value
+
+## Project Architecture
+
+The project is being refactored to separate behavior from calculations.
+
+### Combat Modules
 
 ```text
 combat.py
@@ -32,24 +161,27 @@ combat.py
 
 Handles combat behavior and flow, such as:
 
-* Resolving player actions
+* Resolving player and party actions
 * Resolving enemy attacks
 * Applying damage
-* Handling combat logs
-* Handling victory, defeat, and escape results
+* Applying pain
+* Returning combat logs
+* Creating combat results
 
 ```text
 combat_calculator.py
 ```
 
-Handles combat-related calculations, such as:
+Handles combat calculations, such as:
 
 * Damage calculation
-* Dodge check
+* Dodge checks
 * Turn priority
 * Guard damage reduction
 * Skill damage calculation
 * Pain gain calculation
+
+### Character Modules
 
 ```text
 character.py
@@ -60,115 +192,56 @@ Handles character behavior and state, such as:
 * Gaining EXP
 * Leveling up
 * Upgrading attributes
-* Spending and restoring MP
+* Spending MP
+* Restoring MP
 * Learning skills
-* Delegating pain behavior to the pain system
+* Delegating pain behavior
 
 ```text
 character_calculator.py
 ```
 
-Handles character-related calculations, such as:
+Handles character calculations, such as:
 
 * Attack from Strength
 * Defense from Strength
 * HP from Endurance
 * MP from Intelligence
-* Speed and dodge from Agility
+* Speed from Agility
+* Dodge chance
 * Status resistance
 * Pain resistance
 * EXP requirement scaling
 
-## Guard System
-
-The old guard stance system has been replaced with a simpler guard system.
-
-There is now only one Guard action.
-
-Guard behavior:
-
-* If the guarding character acts before the enemy and gets attacked, it becomes a perfect guard.
-* If the enemy acts first and attacks the guarding character, it becomes a partial guard.
-* If the enemy attacks another party member, the guard has no effect.
-
-This makes guard easier to understand and better suited for the current turn-priority system.
-
-## Temporary UI Demo
-
-A temporary Pygame UI is included for demonstration.
-
-The UI allows the player to:
-
-* Select a party member
-* Select an enemy body part
-* Use Attack
-* Use Guard
-* Use Analyze
-* Use Run
-* View combat logs
-* View party and enemy status
-
-The UI is only a prototype and is mainly used to demonstrate the combat system visually.
-
-## Requirements
-
-* Python 3.10 or newer
-* Pygame
-
-Install dependencies:
-
-```bash
-pip install pygame
-```
-
-## How to Run
-
-Run the demo combat UI:
-
-```bash
-python demo_combat_ui.py
-```
-
-If your system uses `python3`, run:
-
-```bash
-python3 demo_combat_ui.py
-```
-
-## Basic Gameplay Flow
-
-1. Select a party member.
-2. Select an enemy body part.
-3. Choose an action:
-
-   * Attack
-   * Skill
-   * Guard
-   * Analyze
-   * Run
-4. Read the combat result in the log panel.
-5. Repeat until the party wins, loses, or escapes.
-
-## Project Structure
-
-Example structure:
+## Example Project Structure
 
 ```text
 RPG-game/
 │
-├── demo_combat_ui.py
+├── main.py
+├── README.md
+│
+├── data/
+│   ├── character_presets.json
+│   ├── pain_profiles.json
+│   ├── enemies.json
+│   └── skills.json
 │
 ├── game/
 │   ├── combat/
 │   │   ├── combat.py
 │   │   ├── combat_calculator.py
-│   │   └── combat_session.py
+│   │   ├── combat_session.py
+│   │   └── encounter.py
 │   │
 │   ├── characters/
 │   │   ├── character.py
 │   │   ├── character_calculator.py
 │   │   ├── character_factory.py
-│   │   └── pain_system.py
+│   │   ├── party.py
+│   │   ├── player.py
+│   │   ├── pain_system.py
+│   │   └── attribute_menu.py
 │   │
 │   ├── enemies/
 │   │   ├── enemy.py
@@ -177,121 +250,184 @@ RPG-game/
 │   ├── skills/
 │   │   └── skill_manager.py
 │   │
-│   ├── ui/
-│   │   └── pygame_combat_ui.py
-│   │
-│   └── data/
-│       ├── character_presets.json
-│       ├── pain_profiles.json
-│       ├── enemies.json
-│       └── skills.json
+│   └── core/
+│       └── actor.py
 │
-└── README.md
+└── saves/
 ```
 
-## Main Systems
+The exact structure may change as the project grows.
 
-### Attribute System
+## Requirements
 
-Characters have four main attributes:
+* Python 3.10 or newer
 
-| Attribute    | Effect                                           |
-| ------------ | ------------------------------------------------ |
-| Strength     | Increases attack, defense, and pain resistance   |
-| Endurance    | Increases HP, status resistance, and max pain    |
-| Agility      | Increases speed and dodge chance                 |
-| Intelligence | Increases MP and may later increase skill damage |
+The current version is a console-based Python prototype.
 
-When a character levels up, they gain attribute points that can be used to improve these attributes.
+## How to Run
 
-### Pain System
+Clone the project:
 
-Pain increases when a character takes damage.
+```bash
+git clone <repository-url>
+```
 
-Pain can reduce combat performance through pain stages.
-At high pain, a character may become unconscious and temporarily unable to act.
+Go into the project folder:
 
-### Skill System
+```bash
+cd RPG-game
+```
 
-Skills use MP.
+Run the main test menu:
 
-Current skill support includes:
+```bash
+python main.py
+```
 
-* MP cost
-* Attack skills
-* Damage multiplier
-* Attribute scaling
-* Optional body-part targeting
-* Accuracy check
+If your system uses `python3`, run:
 
-More skill types can be added later.
+```bash
+python3 main.py
+```
 
-### Body-Part Combat
+## Testing Through `main.py`
 
-Enemies have body parts that can be targeted individually.
+The project is currently tested through a console menu inside `main.py`.
 
-Attacking body parts can:
+When running:
 
-* Damage the part
-* Deal HP damage to the enemy
-* Disable the part
-* Trigger instant death if the part is vital
+```bash
+python main.py
+```
 
-For example, an enemy may be instantly defeated if its head is destroyed.
+The program shows a test menu:
 
-### Analyze System
+```text
+Choose test mode:
+1. Test combat only
+2. Test encounter system
+3. Test both
+4. Test inventory only
+5. Test attribute points only
+```
 
-Analyze reveals information about an enemy, such as:
+### Test Modes
 
-* Vital parts
-* Weak points
-* Important combat hints
+| Option | Test Mode                  | Purpose                                                         |
+| ------ | -------------------------- | --------------------------------------------------------------- |
+| 1      | Test combat only           | Starts a direct combat test between the party and an enemy      |
+| 2      | Test encounter system      | Tests combat with encounter rewards such as EXP, gold, and loot |
+| 3      | Test both                  | Runs both combat-only and encounter tests                       |
+| 4      | Test inventory only        | Tests adding, removing, showing, and checking inventory items   |
+| 5      | Test attribute points only | Tests level-up and attribute upgrade behavior                   |
 
-This replaces the old system where the player already knew enemy attacks in advance.
+## Main Test Details
 
-## Development Notes
+### 1. Test Combat Only
 
-This project is currently a prototype.
-The current focus is on building clean combat architecture before expanding the game world.
+This mode creates a player party and an enemy, then starts combat directly.
 
-Planned improvements:
+It is useful for checking:
 
-* Better Pygame UI
-* Skill selection UI
-* Inventory system
-* Equipment system
-* More enemies
+* Turn order
+* Attack behavior
+* Skill behavior
+* Guard behavior
+* Enemy intent
+* Pain gain
+* Unconscious state
+* Victory and defeat conditions
+
+### 2. Test Encounter System
+
+This mode tests the full encounter flow.
+
+It is useful for checking:
+
+* Combat result processing
+* EXP rewards
+* Gold rewards
+* Loot rewards
+* Player inventory after combat
+* Party state after combat
+* Attribute upgrade phase after encounter
+
+### 3. Test Both
+
+This mode runs both:
+
+* Combat-only test
+* Encounter system test
+
+It is useful when checking whether combat changes also work correctly inside the encounter system.
+
+### 4. Test Inventory Only
+
+This mode tests the inventory system without combat.
+
+It is useful for checking:
+
+* Adding items
+* Removing items
+* Showing inventory
+* Checking item existence
+* Calculating total inventory value
+
+### 5. Test Attribute Points Only
+
+This mode tests character progression and attribute upgrades.
+
+It is useful for checking:
+
+* Level-up behavior
+* Attribute point gain
+* Strength upgrade
+* Endurance upgrade
+* Agility upgrade
+* Derived stat refresh
+* HP, MP, dodge, resistance, and pain limit changes
+
+## Development Status
+
+This project is still a prototype.
+
+Current focus:
+
+* Cleaning combat architecture
+* Separating calculations from behavior
+* Improving party-based combat
+* Expanding the skill system
+* Making enemies and characters more data-driven
+* Testing core systems through `main.py`
+
+## Planned Improvements
+
+Possible future improvements:
+
+* Better party management
+* More enemy types
 * More character presets
-* Party management
+* More skill types
 * Status effects
+* Inventory expansion
+* Equipment system
 * Save/load system
-* Map or exploration system
+* Exploration system
 * Dialogue system
+* Graphical UI in the future
 
-## Git Usage
+## Git Workflow
 
-Common commands:
+Common commands for updating the repository:
 
 ```bash
 git add .
-git commit -m "Update RPG combat system"
+git commit -m "Update RPG game system"
 git push
 ```
 
-## Repository
+## Notes
 
-GitHub repository:
+This project is mainly for learning game architecture and RPG system design.
 
-```text
-https://github.com/AtomTNB2202/RPG-game
-```
-
-## Status
-
-This project is still in early development.
-
-Current goal:
-
-```text
-Build a playable RPG combat demo with clean and expandable architecture.
-```
+The codebase is being improved step by step, with a focus on making each system easier to maintain, test, and expand.
